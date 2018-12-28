@@ -1,0 +1,17 @@
+
+node {
+	checkout scm
+	stage('compile_AND_Package') {
+			bat 'mvn clean package -DskipTest'
+	}
+	stage('Unit_test') {
+		bat 'mvn surefire:test'
+			step([$class: 'Publisher'])
+	}
+	stage('Code_Analysist') {
+		withSonarQubeEnv {
+			bat 'mvn sonar:sonar'
+		}
+	}
+}
+
